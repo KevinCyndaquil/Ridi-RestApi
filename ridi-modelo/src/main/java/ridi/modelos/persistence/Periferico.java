@@ -19,7 +19,7 @@ public class Periferico extends Dispositivo {
     @JsonBackReference
     @ManyToOne Computadora conectado_a;
     @JsonManagedReference
-    @OneToMany Set<Historial> historial;
+    @OneToMany(mappedBy = "periferico") Set<Historial> historial;
 
     @Override
     public @NonNull Instancias instanciado() {

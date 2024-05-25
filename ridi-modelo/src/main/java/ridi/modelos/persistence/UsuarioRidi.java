@@ -2,6 +2,7 @@ package ridi.modelos.persistence;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.*;
@@ -42,4 +43,29 @@ public class UsuarioRidi {
     @JsonProperty(access = WRITE_ONLY)
     String passwd;
     @JsonIgnore String salt;
+    Roles role;
+    @JsonProperty(access = WRITE_ONLY)
+    @Pattern(groups = InitInfo.class,
+            regexp = "^all|([a-z]+:[a-zA-Z0-9]+(;[a-z]+:[a-zA-Z0-9]+)*)",
+            message = "Formato de permisos invalido")
+    String permisos;
+
+    @JsonSetter("role")
+    public void setRole(Roles role) {
+        this.role = role;
+        if (role == Roles.ADMIN) permisos = "all";
+    }
+
+    public void setPermisos(String permisos) {
+        if (role == Roles.ADMIN && !permisos.equals("all"))
+            throw new IllegalArgumentException(
+                    "permisos otorgados a ADMIN no son adecuados, se esperaba 'all' en lugar de '%s'"
+                            .formatted(permisos));
+        this.permisos = permisos;
+    }
+
+    public enum Roles {
+        ADMIN,
+        ENCARGADO
+    }
 }

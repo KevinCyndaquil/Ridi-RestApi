@@ -12,9 +12,9 @@ import java.util.Set;
 @Entity(name = "computadoras")
 public class Computadora extends Dispositivo {
     String nombre;
-    int arquitectura;
+    Integer arquitectura;
     String organizacion;
-    long maximo_procesos;
+    Integer maximo_procesos;
     String sistema_operativo;
     String ipv4;
     String version;

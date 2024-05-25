@@ -14,6 +14,7 @@ import ridi.groups.NotId;
 import java.util.UUID;
 
 import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.NAME;
+import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.InheritanceType.JOINED;
 
 @JsonTypeInfo(use = NAME, property = "instanciado")
@@ -34,7 +35,7 @@ public abstract class Dispositivo {
     String descripcion;
     String estatus;
     @Getter(AccessLevel.NONE)@Setter(AccessLevel.NONE)
-    Instancias instanciado = instanciado();
+    @Enumerated(STRING) Instancias instanciado = instanciado();
 
     public enum Instancias {
         COMPUTADORA,
