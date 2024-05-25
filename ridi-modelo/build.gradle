@@ -1,0 +1,13 @@
+plugins {
+    id 'java-library'
+}
+
+jar.enabled = true
+
+bootJar {
+    enabled = false
+}
+
+dependencies {
+    implementation project(':ridi-validation')
+}

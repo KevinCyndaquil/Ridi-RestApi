@@ -1,0 +1,5 @@
+rootProject.name = 'ridi'
+
+include 'ridi-api'
+include 'ridi-modelo'
+include 'ridi-validation'

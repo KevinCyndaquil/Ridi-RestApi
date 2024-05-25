@@ -1,0 +1,74 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.0'
+    id 'io.spring.dependency-management' version '1.1.5'
+}
+
+group = 'softwave.ridi'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = '17'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+allprojects {
+    apply from: "$rootProject.projectDir/dependencies.gradle"
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    group = 'softwave.ridi'
+    version = '1.0.0'
+
+    java {
+        sourceCompatibility = '17'
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencies {
+        compileOnly libs.lombok
+        annotationProcessor libs.lombok
+
+        implementation springLibs.starter
+        implementation springLibs.dataJpa
+        implementation springLibs.validation
+        implementation springLibs.starterWeb
+        testImplementation springLibs.starterTest
+
+        implementation libs.postgres
+
+        testImplementation testsLibs.jupiter
+        testRuntimeOnly testsLibs.jupiterLauncher
+    }
+
+    tasks.named('test', Test) {
+        useJUnitPlatform()
+        testLogging {
+            events 'passed', 'skipped', 'failed'
+        }
+    }
+
+    tasks.register('hello') {
+        println "Hi! I'm $project.name"
+    }
+}
+
+dependencies {
+    implementation project(':ridi-api')
+}
+
+bootJar {
+    mainClass = 'ridi.web.RidiApiApplication'
+}

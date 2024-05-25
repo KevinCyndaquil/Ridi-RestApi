@@ -1,0 +1,19 @@
+ext.libs = [
+        'lombok': 'org.projectlombok:lombok:1.18.32',
+        'postgres': 'org.postgresql:postgresql'
+]
+
+ext.springLibs = [
+        'starter': 'org.springframework.boot:spring-boot-starter',
+        'starterTest': 'org.springframework.boot:spring-boot-starter-test',
+        'starterWeb': 'org.springframework.boot:spring-boot-starter-web',
+        'dataJpa': 'org.springframework.boot:spring-boot-starter-data-jpa',
+        'security': 'org.springframework.security:spring-security-web',
+        'validation': 'org.springframework.boot:spring-boot-starter-validation'
+]
+
+ext.testsLibs = [
+        'jupiter': 'org.junit.jupiter:junit-jupiter:5.9.2',
+        'jupiterLauncher': 'org.junit.platform:junit-platform-launcher'
+
+]
