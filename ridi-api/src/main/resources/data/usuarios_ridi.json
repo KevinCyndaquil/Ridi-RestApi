@@ -1,0 +1,11 @@
+[
+  {
+    "nombres": "ERWIN SANTIAGO",
+    "apellidos": "BERMUDEZ CASILLAS",
+    "telefono": "+(52) 962 185 9698",
+    "correo": "erwin.bermudez@unach.mx",
+    "passwd": "bermideZ12!",
+    "role": "ADMIN",
+    "permisos": "all"
+  }
+]

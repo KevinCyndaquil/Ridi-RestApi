@@ -8,8 +8,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import lombok.*;
-import ridi.groups.IdInfo;
-import ridi.groups.NotId;
+import ridi.modelos.util.groups.IdInfo;
+import ridi.modelos.util.groups.NotId;
+import ridi.modelos.util.Unico;
 
 import java.util.UUID;
 
@@ -25,10 +26,10 @@ import static jakarta.persistence.InheritanceType.JOINED;
 @Data
 @Entity(name = "dispositivos")
 @Inheritance(strategy = JOINED)
-public abstract class Dispositivo {
+public abstract class Dispositivo implements Unico<UUID> {
     @Null(groups = NotId.class, message = "No se requiere un ID")
     @NotNull(groups = IdInfo.class, message = "Se requiere un ID")
-    @Id UUID id;
+    @Id @GeneratedValue(strategy = GenerationType.AUTO) UUID id;
     String no_serie;
     String fabricante;
     @ManyToOne Sucursal sucursal;

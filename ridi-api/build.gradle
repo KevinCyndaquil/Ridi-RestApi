@@ -6,6 +6,13 @@ configurations {
 
 dependencies {
     implementation project(':ridi-modelo')
+    implementation libs.jwt
+    implementation libs.jwtApi
+    implementation libs.jwtJackson
+    implementation springLibs.security
+    implementation springLibs.securityConfig
+    testImplementation springLibs.securityTest
+    testImplementation libs.h2
 }
 
 tasks.named('test') {

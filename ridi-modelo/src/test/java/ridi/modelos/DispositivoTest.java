@@ -1,4 +1,4 @@
-package validation;
+package ridi.modelos;
 
 import org.junit.jupiter.api.Test;
 import ridi.modelos.persistence.*;

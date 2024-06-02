@@ -1,4 +1,4 @@
-package ridi.groups;
+package ridi.modelos.util.groups;
 
 /**
  * Se utiliza para marcar características o validaciones que se requieran para definir un objeto sin

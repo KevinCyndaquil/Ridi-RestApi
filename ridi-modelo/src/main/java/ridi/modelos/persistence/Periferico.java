@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import ridi.modelos.util.Unico;
 
 import java.sql.Timestamp;
 import java.util.Set;
@@ -29,13 +30,21 @@ public class Periferico extends Dispositivo {
     @Data
     @Entity(name = "historial_perifericos")
     @IdClass(Historial.ID.class)
-    public static class Historial {
+    public static class Historial implements Unico<Historial.ID> {
         @JsonBackReference
         @Id @ManyToOne Periferico periferico;
         @Id int cns;
         Timestamp fecha;
         String estatus;
         String info;
+
+        @Override
+        public ID getId() {
+            ID id = new ID();
+            id.setPeriferico(periferico);
+            id.setCns(cns);
+            return id;
+        }
 
         @Data
         @Embeddable

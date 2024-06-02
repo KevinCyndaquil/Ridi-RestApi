@@ -2,35 +2,40 @@ package ridi.modelos.persistence;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import ridi.annotations.Email;
+import ridi.annotations.Name;
 import ridi.annotations.PhoneNumber;
-import ridi.groups.IdInfo;
-import ridi.groups.InitInfo;
-import ridi.groups.NotId;
+import ridi.modelos.util.groups.IdInfo;
+import ridi.modelos.util.groups.InitInfo;
+import ridi.modelos.util.groups.NotId;
+import ridi.modelos.util.Unico;
 
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 
 @Data
+@EqualsAndHashCode(exclude = {"telefono", "passwd", "salt", "role", "permisos"})
 @Entity(name = "usuarios_ridi")
-public class UsuarioRidi {
+public class UsuarioRidi implements Unico<UUID>, UserDetails {
     @Null(groups = NotId.class, message = "No se requiere un ID")
     @NotNull(groups = IdInfo.class, message = "Se requiere un ID")
-    @Id UUID id;
-    @NotBlank(groups = InitInfo.class, message = "Se requiere un nombre")
-    @Pattern(groups = InitInfo.class,
-            regexp = "(?U)^[\\p{Lu}\\p{M}]+( [\\p{Lu}\\p{M}]+)*$",
-            message = "Formato para nombres invalido")
+    @Id @GeneratedValue(strategy = GenerationType.AUTO) UUID id;
+    @Name(groups = InitInfo.class, message = "Formato para nombres invalido")
     String nombres;
-    @Pattern(groups = InitInfo.class,
-            regexp = "(?U)^[\\p{Lu}\\p{M}]+( [\\p{Lu}\\p{M}]+|)$",
-            message = "Formato para apellidos invalido")
+    @Name(groups = InitInfo.class, message = "Formato para apellidos invalido")
     String apellidos;
     @PhoneNumber(groups = InitInfo.class, message = "Se requiere un número de teléfono valido")
     String telefono;
@@ -43,14 +48,15 @@ public class UsuarioRidi {
     @JsonProperty(access = WRITE_ONLY)
     String passwd;
     @JsonIgnore String salt;
+    @NotNull(groups = InitInfo.class, message = "Se requiere un role")
     Roles role;
     @JsonProperty(access = WRITE_ONLY)
+    @NotNull(groups = InitInfo.class, message = "Se requieren los permisos")
     @Pattern(groups = InitInfo.class,
             regexp = "^all|([a-z]+:[a-zA-Z0-9]+(;[a-z]+:[a-zA-Z0-9]+)*)",
             message = "Formato de permisos invalido")
     String permisos;
 
-    @JsonSetter("role")
     public void setRole(Roles role) {
         this.role = role;
         if (role == Roles.ADMIN) permisos = "all";
@@ -64,8 +70,33 @@ public class UsuarioRidi {
         this.permisos = permisos;
     }
 
+    @Override
+    @JsonIgnore
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    @JsonIgnore
+    public String getPassword() {
+        return passwd;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getUsername() {
+        return correo;
+    }
+
     public enum Roles {
         ADMIN,
         ENCARGADO
+    }
+
+    public static Set<String> codigosSucursalEnPermiso(@NonNull String permisos) {
+        return Arrays.stream(permisos.split(";"))
+                .filter(c -> !c.matches("sc"))
+                .map(c -> c.split(":")[1])
+                .collect(Collectors.toSet());
     }
 }

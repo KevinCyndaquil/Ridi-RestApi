@@ -1,27 +1,30 @@
 package ridi.modelos.persistence;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
-import ridi.groups.IdInfo;
-import ridi.groups.InitInfo;
-import ridi.groups.NotId;
+import ridi.modelos.util.groups.IdInfo;
+import ridi.modelos.util.groups.InitInfo;
+import ridi.modelos.util.groups.NotId;
+import ridi.modelos.util.Unico;
 
 import java.util.UUID;
 
 @Data
 @Entity(name = "sucursales")
-public class Sucursal {
+public class Sucursal implements Unico<UUID> {
     @Null(groups = NotId.class, message = "No se requiere un ID")
     @NotNull(groups = IdInfo.class, message = "Se requiere un ID")
-    @Id UUID id;
+    @Id @GeneratedValue(strategy = GenerationType.AUTO) UUID id;
     @NotBlank(groups = InitInfo.class, message = "Se requiere el codigo de sucursal")
     String codigo;
-    @NotBlank(groups = InitInfo.class, message = "Se requiere un nombre")
+    @NotBlank(groups = InitInfo.class, message = "Se requiere un no mbre")
     String nombre;
     @NotNull(groups = InitInfo.class, message = "Se requiere un estado")
     @Pattern(groups = InitInfo.class,

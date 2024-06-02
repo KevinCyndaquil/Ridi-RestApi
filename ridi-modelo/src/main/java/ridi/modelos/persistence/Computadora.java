@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import ridi.modelos.util.Unico;
 
 import java.sql.Timestamp;
 import java.util.Set;
@@ -38,7 +39,7 @@ public class Computadora extends Dispositivo {
     @Data
     @Entity(name = "historial_computadoras")
     @IdClass(Historial.ID.class)
-    public static class Historial {
+    public static class Historial implements Unico<Historial.ID> {
         @JsonBackReference
         @Id @ManyToOne Computadora computadora;
         @Id int cns;
@@ -47,6 +48,14 @@ public class Computadora extends Dispositivo {
         String ipv4;
         String estatus;
         boolean en_linea;
+
+        @Override
+        public ID getId() {
+            ID id = new ID();
+            id.setComputadora(computadora);
+            id.setCns(cns);
+            return id;
+        }
 
         @Data
         @Embeddable
